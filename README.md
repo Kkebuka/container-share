@@ -17,15 +17,15 @@ All data is stored locally in the browser (no backend, no accounts required). Th
 
 ## Tech Stack
 
-| Technology | Version |
-|---|---|
-| React | 19 |
-| TypeScript | 5.9 |
-| Vite | 7 |
-| Tailwind CSS | 4 |
-| React Router | 7 |
-| jsPDF | 4 |
-| vite-plugin-pwa | 1 |
+| Technology      | Version |
+| --------------- | ------- |
+| React           | 19      |
+| TypeScript      | 5.9     |
+| Vite            | 7       |
+| Tailwind CSS    | 4       |
+| React Router    | 7       |
+| jsPDF           | 4       |
+| vite-plugin-pwa | 1       |
 
 ## Getting Started
 
