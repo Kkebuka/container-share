@@ -1,73 +1,91 @@
-# React + TypeScript + Vite
+# ContainerShare
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A Progressive Web App (PWA) for fairly splitting shipping container freight costs among multiple owners/partners. If you share a container with others, ContainerShare calculates each person's freight share based on their proportional use of the container's cubic volume (CBM).
 
-Currently, two official plugins are available:
+## What It Does
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+When multiple parties share a single shipping container, total freight costs need to be divided fairly. ContainerShare handles this by:
 
-## React Compiler
+1. **Sessions** — each container shipment is a session with a total freight cost and container CBM capacity.
+2. **Owners** — each party sharing the container is an owner, with their own list of items.
+3. **Items** — each item has a carton count, CBM per carton, and USD price per carton.
+4. **Freight allocation** — freight costs are split proportionally to each owner's total CBM relative to the full container.
+5. **PDF reports** — a detailed cost breakdown PDF can be generated per owner.
+6. **Audit system** — built-in checks flag rounding discrepancies or allocation warnings.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+All data is stored locally in the browser (no backend, no accounts required). The app is fully installable as a PWA on desktop and mobile.
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+| Technology | Version |
+|---|---|
+| React | 19 |
+| TypeScript | 5.9 |
+| Vite | 7 |
+| Tailwind CSS | 4 |
+| React Router | 7 |
+| jsPDF | 4 |
+| vite-plugin-pwa | 1 |
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Getting Started
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Prerequisites
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Node.js 18 or later
+- npm, yarn, or pnpm
+
+### Installation
+
+```bash
+git clone https://github.com/your-username/goods-splitter.git
+cd goods-splitter
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Running Locally
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
+
+Then open [http://localhost:5173](http://localhost:5173) in your browser.
+
+### Building for Production
+
+```bash
+npm run build
+```
+
+The production-ready files will be output to the `dist/` directory. You can preview the build locally with:
+
+```bash
+npm run preview
+```
+
+## Project Structure
+
+```
+src/
+├── components/       # Reusable UI and session-specific components
+│   ├── layout/       # BottomNav, PageHeader
+│   ├── session/      # AuditSummary, ItemRow, OwnerCard, etc.
+│   └── ui/           # Generic UI primitives (Button, Input, Toast, etc.)
+├── context/          # React context: AppContext (state) + ToastContext
+├── pages/            # Route-level page components
+│   ├── Dashboard/    # Session list & creation
+│   └── Session/      # Owner entry, hub, review, and session report
+├── types/            # TypeScript interfaces and enums
+└── utils/            # Pure functions: calculations, formatting, PDF, storage
+```
+
+## Key Concepts
+
+- **Session** — represents one container shipment. Holds freight cost (USD), container capacity (CBM), and a list of owners.
+- **Owner** — a party sharing the container. Has a list of goods items and a computed freight share.
+- **Item** — a line of goods: carton quantity, CBM per carton, and unit price in USD.
+- **Freight Share** — calculated as `(owner CBM / total allocated CBM) × total freight USD`.
+- **Grand Total** — goods value plus freight share for each owner.
+
+## License
+
+This project is private and not licensed for redistribution.
